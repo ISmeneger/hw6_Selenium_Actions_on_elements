@@ -16,4 +16,16 @@ public class WebFormSteps {
         Thread.sleep(3000);
         navigationButton.click();
     }
+
+    public static void openDropdownMenuPage(WebDriver driver) throws InterruptedException {
+        WebElement dropdownMenuButton = driver.findElement(By.xpath("//a[@href = 'dropdown-menu.html']"));
+        Thread.sleep(3000);
+        dropdownMenuButton.click();
+    }
+
+    public static void openDragAndDropPage(WebDriver driver) throws InterruptedException {
+        WebElement dragAndDropButton = driver.findElement(By.xpath("//a[@href = 'drag-and-drop.html']"));
+        Thread.sleep(3000);
+        dragAndDropButton.click();
+    }
 }
