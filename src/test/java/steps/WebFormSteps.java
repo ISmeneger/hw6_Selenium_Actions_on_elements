@@ -10,4 +10,10 @@ public class WebFormSteps {
         Thread.sleep(3000);
         webFormButton.click();
     }
+
+    public static void openNavigationPage(WebDriver driver) throws InterruptedException {
+        WebElement navigationButton = driver.findElement(By.xpath("//a[@href = 'navigation1.html']"));
+        Thread.sleep(3000);
+        navigationButton.click();
+    }
 }
