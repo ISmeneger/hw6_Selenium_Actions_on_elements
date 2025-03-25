@@ -12,7 +12,7 @@ import static steps.WebFormSteps.openNavigationPage;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class NavigationActionsTest {
+public class NavigationActionsTests {
     WebDriver driver;
     private static final String BASE_URL = "https://bonigarcia.dev/selenium-webdriver-java/index.html";
 
