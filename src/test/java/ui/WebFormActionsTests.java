@@ -18,6 +18,11 @@ import static steps.WebFormSteps.openWebFormPage;
 public class WebFormActionsTests {
     WebDriver driver;
     private static final String BASE_URL = "https://bonigarcia.dev/selenium-webdriver-java/";
+    private static final String BIG_TEXT = "Lorem ipsum dolor sit amet consectetur adipiscing elit habitant metus, " +
+                                            "tincidunt maecenas posuere sollicitudin augue duis bibendum mauris eu, et dignissim magna ad nascetur suspendisse quis nunc. " +
+                                            "Fames est ligula molestie aliquam pretium bibendum nullam, sociosqu maecenas mus etiam consequat ornare leo, sem mattis " +
+                                            "varius luctus litora senectus. Parturient quis tristique erat natoque tortor nascetur, primis augue vivamus habitasse " +
+                                            "senectus porta leo, aenean potenti ante a nam.";
 
     @BeforeEach
     void start() throws InterruptedException {
@@ -129,10 +134,10 @@ public class WebFormActionsTests {
     void textAreaFieldTest() throws InterruptedException {
         WebElement textAreaInputField = driver.findElement(By.name("my-textarea"));
         WebElement textAreaInputText = driver.findElement(By.xpath("//label[@class='form-label w-100' and normalize-space(text()) = 'Textarea']"));
-        textAreaInputField.sendKeys("My name is Ilya");
+        textAreaInputField.sendKeys(BIG_TEXT);
         Thread.sleep(2000);
 
-        assertEquals("My name is Ilya", textAreaInputField.getAttribute("value"));
+        assertEquals(BIG_TEXT, textAreaInputField.getAttribute("value"));
         assertEquals("Textarea", textAreaInputText.getText());
     }
 
@@ -140,7 +145,7 @@ public class WebFormActionsTests {
     @Order(10)
     void textAreaFieldClearTest() throws InterruptedException {
         WebElement textAreaInputField = driver.findElement(By.name("my-textarea"));
-        textAreaInputField.sendKeys("My name is Ilya");
+        textAreaInputField.sendKeys(BIG_TEXT);
         Thread.sleep(2000);
         textAreaInputField.clear();
         Thread.sleep(2000);
@@ -300,6 +305,12 @@ public class WebFormActionsTests {
         submit.click();
         Thread.sleep(3000);
         assertThat(driver.getCurrentUrl()).contains("STE+In+Banner");
+
+        WebElement formSubmittedText = driver.findElement(By.xpath("//h1[@class = 'display-6']"));
+        assertEquals("Form submitted", formSubmittedText.getText());
+
+        WebElement receivedText = driver.findElement(By.xpath("//p[@class = 'lead']"));
+        assertEquals("Received!", receivedText.getText());
     }
 
     @Test
@@ -385,11 +396,13 @@ public class WebFormActionsTests {
 
         dateBox.click();
         Thread.sleep(2000);
-        dateBox.sendKeys("03/24/2025");
+        WebElement dateLocator = driver.findElement(By.xpath("//td[@class = 'day' and text() = 25]"));
+        dateLocator.click();
+//        dateBox.sendKeys("03/24/2025");
         dateBox.sendKeys(Keys.ESCAPE);
         Thread.sleep(2000);
 
-        assertEquals("03/24/2025", dateBox.getAttribute("value"));
+        assertEquals("03/25/2025", dateBox.getAttribute("value"));
         assertEquals("Date picker", datePickerText.getText());
     }
 
@@ -424,15 +437,28 @@ public class WebFormActionsTests {
     void actionAPIMouseExampleRangeTest() throws InterruptedException {
         WebElement rangeElement = driver.findElement(By.name("my-range"));
         WebElement exampleRangeText = driver.findElement(By.xpath("//label[@class='form-label w-100' and normalize-space(text()) = 'Example range']"));
-        rangeElement.click();
+        int width = rangeElement.getSize().getWidth();
+        int x = rangeElement.getLocation().getX();
+        int y = rangeElement.getLocation().getY();
+        int i;
+        for (i = 5; i <= 10; i++) {
+            new Actions(driver)
+                    .moveToElement(rangeElement)
+                    .clickAndHold()
+                    .moveToLocation(x + width / 10 * i, y)
+                    .release()
+                    .perform();
 
-        Actions actions = new Actions(driver);
-        actions.clickAndHold(rangeElement)
-                .moveByOffset(60, 0).release().perform();
+        }
+//        rangeElement.click();
+//
+//        Actions actions = new Actions(driver);
+//        actions.clickAndHold(rangeElement)
+//                .moveByOffset(60, 0).release().perform();
         Thread.sleep(2000);
 
         assertEquals("Example range", exampleRangeText.getText());
-        assertEquals("7", rangeElement.getDomProperty("value"));
+        assertEquals(String.valueOf(i - 1), rangeElement.getDomProperty("value"));
     }
 
     @Test
